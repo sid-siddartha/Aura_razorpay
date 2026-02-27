@@ -1,0 +1,36 @@
+Problem Statement
+
+Today, we have UPI apps like PhonePe, Google Pay, and many others, but none of them provide a proper budget tracking system. For example, if someone spends 50% of their monthly income, these apps don’t notify the user. As a result, people often spend all their money without realizing it.
+
+Solution – AI Finance Manager
+
+To solve this problem, I am building a web-based AI Finance Manager that helps users track their expenses in a smarter way.
+
+Key Features:
+
+Visual Dashboard
+The platform will provide clear visual representations of account transactions and expenses, helping users understand where their money is going.
+
+Budget Alerts
+Users can set a monthly budget (e.g., ₹6000). If spending crosses 50% of the budget (₹3000 in this case), the system will automatically send an alert email, reminding the user to manage their expenses wisely.
+
+AI-Powered Receipt Scanning
+Since people are often too lazy to manually enter every transaction, the system will allow users to simply upload a picture of their receipts. Using AI (via Gemini API), the platform will automatically extract the details and fill out the expense form—making tracking fast and effortless.
+
+Monthly Financial Report with Insights
+At the end of every month, the system will generate and email a detailed financial report. This report will include insights, showing where most of the money was spent, and provide suggestions on how to save more in the next month.
+
+Would you like me to also reframe this into a polished pitch deck format (problem → solution → features → impact), so you can use it for presentations or investors?
+
+You said:
+and alsi provide mea prompt that is this is a real world problem so can i get succed in this
+ChatGPT said:
+
+Got it 👍 Here’s a strong prompt you can use (for yourself, mentors, or even pitching to investors) that frames this as a real-world problem and asks if your solution can succeed:
+
+Prompt:
+*"In today’s world, millions of people use UPI apps like PhonePe, Google Pay, and Paytm to make transactions, but none of these platforms provide proper budget tracking or financial health insights. People often spend their entire income without realizing how much has gone or where it has been spent.
+
+I’m building a solution called AI Finance Manager – a web platform that not only tracks expenses but also sets monthly budgets, sends alerts when a significant portion of the budget is used, scans receipts using AI to automatically log expenses, and provides a detailed monthly report with insights and savings suggestions.
+
+Since this is a real-world problem that almost everyone faces, do you think this product has the potential to succeed in the market? What challenges should I be ready for in terms of adoption, competition, and scalability?"*

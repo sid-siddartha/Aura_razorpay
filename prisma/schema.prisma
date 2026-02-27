@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  // url       = pooler URL (pgbouncer, port 6543) — used by the app at runtime
+  // directUrl = direct URL (port 5432)             — used by Prisma CLI for migrations
+}
+
+
+model User {
+  id            String         @id @default(uuid())
+  clerkUserId   String         @unique // clerk user id
+  email         String         @unique
+  name          String?
+  imageUrl      String?
+  transactions  Transaction[]  //here we refearing transaction table that mean user has access to transaction table or mapped to transaction table
+  accounts      Account[]      // same heare we are refering accounts table that means user has access to account
+  budgets       Budget[]       //user model is mapped to the budgets table
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("users") // This maps the User model to the "users" table in the DB
+}
+
+//the Prisma model is named User (singular), but the actual table in the database is named users (plural).
+//This attribute ensures that when Prisma generates queries or migrations, it uses "users" as the table name in the database, while in your code you interact with the model as User.
+
+
+model Account {
+  id           String         @id @default(uuid())
+  name         String
+  type         AccountType    //Enum it can has some limited value that what is account type
+  balance      Decimal        @default(0) // will ask initial balance while creating an account
+  isDefault    Boolean        @default(false)
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  //user: This is the name of the field in the current model (Account). It represents a relation to another model.
+  //User: This is the type of that relation field, meaning this field links to the User model.
+  //@relation(...): This attribute configures how the relation works:
+  //fields: [userId]: Specifies that the field userId in this model (Account) is the foreign key that holds the reference.
+  //references: [id]: Specifies that the userId field refers to the id field of the User model, linking these two fields.
+  //onDelete: Cascade: Specifies the database cascade behavior — if a referenced User record is deleted, all related Account records will also be automatically deleted.
+
+  //HERE onDelete cascade mean on with realation with userId of table Account with id of table user when the user is deleted that accounts related to user will also be deleted
+  //therefore the attribute is @relation(fields : [Id of current table] , [Id of the table in which it is in relation with], on delete what happens)
+  transactions Transaction[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([userId])  //wee are keeping userId has index to search accounts
+  @@map("accounts")  //"accounts" in database
+}
+
+enum AccountType {
+  CURRENT
+  SAVINGS
+}
+
+
+model Transaction {
+  id                String              @id @default(uuid())
+  type              TransactionType
+  amount            Decimal
+  description       String?
+  date              DateTime
+  category          String
+  receiptUrl        String?
+  isRecurring       Boolean             @default(false)
+  recurringInterval RecurringInterval?  // Only used if isRecurring is true
+  nextRecurringDate DateTime?           // Next date for recurring transaction
+  lastProcessed     DateTime?           // Last time this recurring transaction was processed
+  status            TransactionStatus   @default(COMPLETED)
+  userId            String
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId         String
+  account           Account             @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([accountId])
+  @@map("transactions")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum RecurringInterval {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Budget {
+  id             String    @id @default(uuid())
+  amount         Decimal
+  lastAlertSent  DateTime? // Track when the last alert was sent
+  userId         String    @unique
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("budgets")
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String   // Clerk userId
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+

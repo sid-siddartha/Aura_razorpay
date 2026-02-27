@@ -1,0 +1,8 @@
+Why the actions Folder Exists
+
+
+1. The actions folder is a common convention (especially in Next.js and similar modern frameworks) for separating "server actions" or business logic from your UI components.
+
+2. It contains functions that perform jobs like database operations, authentication, and mutations (creating, updating, or deleting records).
+
+3. By placing this code in actions, you keep your code modular, secure, and maintainable—the UI layer calls these actions, rather than performing business logic directly.

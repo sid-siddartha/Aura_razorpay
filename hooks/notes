@@ -1,0 +1,8 @@
+1. Purpose of the hooks Folder:
+In a React project, the hooks folder is typically created to organize and store reusable custom hooks. Custom hooks are JavaScript functions that start with the word "use" and allow you to share logic across multiple components without repeating code. By keeping these hooks in their own folder, the codebase stays clean, modular, and maintainable.
+
+2. Purpose of use-fetch.js:
+The use-fetch.js file defines a custom React hook called useFetch. This hook abstracts common fetch/request logic (like loading, error handling, and data/result storage) so that components can perform asynchronous operations (like API calls) efficiently without repeating setup code for these tasks.
+
+
+this file use-fetch not understood----------------------------
