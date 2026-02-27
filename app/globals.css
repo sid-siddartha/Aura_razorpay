@@ -114,6 +114,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -133,19 +134,20 @@
   perspective: 10000px;
 }
 
-.hero-image{
+.hero-image {
   transform: scale(1) rotateX(15deg);
   transition: transform 0.5s ease-out;
   will-change: transform;
 }
 
-.hero-image-scroller{
+.hero-image-scroller {
   transform: rotateX(0deg) scale(1) translateY(40);
 }
 
 [data-state="open"] {
   animation: slideIn 300ms ease-out;
 }
+
 [data-state="closed"] {
   animation: fadeOut 200ms ease-in;
 }
@@ -155,6 +157,7 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -165,8 +168,8 @@
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
 }
-

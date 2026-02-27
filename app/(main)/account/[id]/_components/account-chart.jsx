@@ -11,16 +11,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Rectangle,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { BarChart2 } from "lucide-react";
 
 // Date range options
 const DATE_RANGES = {
@@ -85,99 +77,76 @@ export default function AccountChart({ transactions }) {
   );
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
-        <CardTitle className="text-base font-normal">
-          Transaction Overview
-        </CardTitle>
-        <Select value={dateRange} onValueChange={setDateRange}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Select range" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(DATE_RANGES).map(([key, { label }]) => (
-              <SelectItem key={key} value={key}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </CardHeader>
-
-      <CardContent>
-        {/* Totals summary */}
-        <div className="flex justify-around mb-6 text-sm">
-          <div className="text-center">
-            <p className="text-muted-foreground">Total Income</p>
-            <p className="text-lg font-bold text-green-500">
-              &#8377;{totals.income.toFixed(2)}
-            </p>
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      {/* Card Header */}
+      <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-50">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center">
+            <BarChart2 className="h-4 w-4 text-indigo-600" />
           </div>
-          <div className="text-center">
-            <p className="text-muted-foreground">Total Expenses</p>
-            <p className="text-lg font-bold text-red-500">
-              &#8377;{totals.expense.toFixed(2)}
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-muted-foreground">Net</p>
-            <p
-              className={`text-lg font-bold ${
-                totals.income - totals.expense >= 0
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}
-            >
-              &#8377;{(totals.income - totals.expense).toFixed(2)}
-            </p>
-          </div>
+          <h2 className="text-sm font-bold text-gray-800">Transaction Overview</h2>
         </div>
+        {/* Pill date-range buttons */}
+        <div className="flex gap-1">
+          {Object.entries(DATE_RANGES).map(([key, { label }]) => (
+            <button
+              key={key}
+              onClick={() => setDateRange(key)}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 ${dateRange === key
+                  ? "bg-indigo-600 text-white"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                }`}
+            >
+              {key === "ALL" ? "All" : key}
+            </button>
+          ))}
+        </div>
+      </div>
 
+      <div className="p-6">
         {/* Chart */}
-         <div style={{ width: "100%", height: 300 }}>
+        <div style={{ width: "100%", height: 300 }}>
           <ResponsiveContainer>
             <BarChart
               data={filteredData}
-              margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+              margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
               <XAxis
                 dataKey="date"
-                fontSize={12}
+                fontSize={11}
                 tickLine={false}
                 axisLine={false}
+                tick={{ fill: "#9ca3af" }}
               />
               <YAxis
-                fontSize={12}
+                fontSize={11}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `&#8377;${value}`}
+                tick={{ fill: "#9ca3af" }}
+                tickFormatter={(value) => `₹${value}`}
               />
               <Tooltip
-                formatter={(value, name) => [`&#8377;${value}`, name]}
+                formatter={(value, name) => [`₹${value.toFixed(2)}`, name]}
                 contentStyle={{
-                  backgroundColor: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "var(--radius)",
+                  backgroundColor: "#fff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                  fontSize: "12px",
                 }}
               />
-              <Legend />
-              <Bar
-                dataKey="income"
-                name="Income"
-                fill="#22c55e"
-                radius={[4, 4, 0, 0]}
+              <Legend
+                iconType="circle"
+                iconSize={8}
+                wrapperStyle={{ fontSize: "11px", color: "#6b7280", paddingTop: "12px" }}
               />
-              <Bar
-                dataKey="expense"
-                name="Expense"
-                fill="#ef4444"
-                radius={[4, 4, 0, 0]}
-              />
+              <Bar dataKey="income" name="Income" fill="#10b981" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="expense" name="Expense" fill="#f43f5e" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

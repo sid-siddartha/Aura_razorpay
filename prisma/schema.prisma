@@ -136,3 +136,21 @@ model PushSubscription {
   @@map("push_subscriptions")
 }
 
+model UpiPayment {
+  id                  String   @id @default(uuid())
+  razorpayOrderId     String   @unique
+  razorpayPaymentId   String?  // Set after webhook confirms payment
+  mobileNumber        String
+  amount              Int      // Amount in paise (₹1 = 100 paise)
+  currency            String   @default("INR")
+  paymentStatus       String   @default("CREATED") // CREATED | PAID | FAILED
+  signature           String?  // Stored for audit trail
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([razorpayOrderId])
+  @@index([mobileNumber])
+  @@map("upi_payments")
+}
+
+

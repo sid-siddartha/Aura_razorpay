@@ -9,7 +9,7 @@ import { CreateAccountDrawer } from "@/components/create-account-drawer";
 import { DashboardOverview } from "./_components/dashboard-overview";
 
 export default async function DashboardPage() {
-    const [accounts, transactions] = await Promise.all([
+  const [accounts, transactions] = await Promise.all([
     getUserAccounts(),
     getDashboardData(),
   ]);
@@ -24,7 +24,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Budget Progress */}
       <BudgetProgress
         initialBudget={budgetData?.budget}
@@ -37,22 +37,32 @@ export default async function DashboardPage() {
         transactions={transactions || []}
       />
 
-
       {/* Accounts Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <CreateAccountDrawer>
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-dashed">
-            <CardContent className="flex flex-col items-center justify-center text-muted-foreground h-full pt-5">
-              <Plus className="h-10 w-10 mb-2" />
-              <p className="text-sm font-medium">Add New Account</p>
-            </CardContent>
-          </Card>
-        </CreateAccountDrawer>
-        {accounts.length > 0 &&
-          accounts?.map((account) => (
-            <AccountCard key={account.id} account={account} />
-          ))}
+      <div>
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 px-0.5">
+          Your Accounts
+        </p>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <CreateAccountDrawer>
+            <div className="group bg-white rounded-2xl border border-dashed border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/30 flex flex-col items-center justify-center h-full min-h-[180px] cursor-pointer transition-all duration-200">
+              <div className="w-12 h-12 bg-indigo-50 group-hover:bg-indigo-100 rounded-2xl flex items-center justify-center mb-3 transition-colors duration-200">
+                <Plus className="h-6 w-6 text-indigo-400 group-hover:text-indigo-600 transition-colors duration-200" />
+              </div>
+              <p className="text-sm font-semibold text-gray-400 group-hover:text-indigo-600 transition-colors duration-200">
+                Add New Account
+              </p>
+              <p className="text-xs text-gray-300 group-hover:text-indigo-400 mt-0.5 transition-colors duration-200">
+                Click to create
+              </p>
+            </div>
+          </CreateAccountDrawer>
+          {accounts.length > 0 &&
+            accounts?.map((account) => (
+              <AccountCard key={account.id} account={account} />
+            ))}
+        </div>
       </div>
     </div>
   );
 }
+
