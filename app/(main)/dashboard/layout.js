@@ -1,7 +1,6 @@
 import DashboardPage from "./page";
 import { BarLoader } from "react-spinners";
 import { Suspense } from "react";
-import { AiChatWidget } from "@/components/AiChatWidget";
 
 export default function Layout() {
   return (
@@ -23,9 +22,6 @@ export default function Layout() {
           <DashboardPage />
         </Suspense>
       </div>
-
-      {/* Floating AI Chat Widget */}
-      <AiChatWidget />
     </div>
   );
 }

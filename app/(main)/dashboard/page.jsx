@@ -1,17 +1,20 @@
 import { Suspense } from "react";
 import { getDashboardData, getUserAccounts } from "@/actions/dashboard";
 import { getCurrentBudget } from "@/actions/budget";
+import { getAAConnection } from "@/actions/account-aggregator";
 import { AccountCard } from "./_components/account-card";
 import { BudgetProgress } from "./_components/budget-progress";
+import { BankConnectionBanner } from "./_components/bank-connection-banner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { CreateAccountDrawer } from "@/components/create-account-drawer";
 import { DashboardOverview } from "./_components/dashboard-overview";
 
 export default async function DashboardPage() {
-  const [accounts, transactions] = await Promise.all([
+  const [accounts, transactions, aaConnection] = await Promise.all([
     getUserAccounts(),
     getDashboardData(),
+    getAAConnection(),
   ]);
 
 
@@ -25,6 +28,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* Account Aggregator onboarding banner — shown until the user is CONNECTED */}
+      <BankConnectionBanner aaConnection={aaConnection} />
+
       {/* Budget Progress */}
       <BudgetProgress
         initialBudget={budgetData?.budget}

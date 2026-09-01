@@ -88,8 +88,8 @@ export function AiChatWidget() {
         }
     }, [isOpen]);
 
-    async function handleSend() {
-        const q = input.trim();
+    async function handleSend(customQuery) {
+        const q = (typeof customQuery === "string" ? customQuery : input).trim();
         if (!q || isLoading) return;
 
         const userMsg = { id: Date.now().toString(), role: "user", text: q, time: new Date() };
@@ -261,6 +261,29 @@ export function AiChatWidget() {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Quick Suggestion Chips */}
+                        {messages.length === 1 && !isLoading && (
+                            <div className="pt-2 pb-1 space-y-1.5">
+                                <p className="text-xs text-muted-foreground font-medium px-1">Suggested questions:</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {[
+                                        "💰 What is my total balance?",
+                                        "📊 Show my recent transactions",
+                                        "💳 Summarize my monthly spending",
+                                        "🎯 What is my budget status?",
+                                    ].map((promptText, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleSend(promptText)}
+                                            className="text-xs px-2.5 py-1.5 rounded-full border border-violet-200 dark:border-violet-800 bg-violet-50/50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors text-left font-medium"
+                                        >
+                                            {promptText}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Thinking indicator */}
                         {isLoading && (

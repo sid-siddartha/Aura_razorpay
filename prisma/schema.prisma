@@ -27,6 +27,7 @@ model User {
   transactions  Transaction[]  //here we refearing transaction table that mean user has access to transaction table or mapped to transaction table
   accounts      Account[]      // same heare we are refering accounts table that means user has access to account
   budgets       Budget[]       //user model is mapped to the budgets table
+  aaConnection  AccountAggregatorConnection? // Account Aggregator onboarding connection
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -124,6 +125,38 @@ model Budget {
   @@map("budgets")
 }
 
+// ─── Account Aggregator ─────────────────────────────────────────────────────
+
+model AccountAggregatorConnection {
+  id          String             @id @default(uuid())
+  userId      String             @unique
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // The mobile number the user registered with their bank (10-digit Indian number)
+  mobileNumber String
+  // VUA = Virtual User Address — Setu assigns this after the consent is created
+  // Format: <mobile>@<aa-handle>, e.g. 9999999999@onemoney
+  vua         String?
+  // The Setu consent ID returned by POST /consents
+  consentId   String?
+  // The Setu-hosted webview URL for the user to approve consent
+  consentUrl  String?
+  // Lifecycle status of this connection
+  status      AAConnectionStatus @default(NOT_CONNECTED)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([userId])
+  @@map("aa_connections")
+}
+
+enum AAConnectionStatus {
+  NOT_CONNECTED
+  INITIATED
+  PENDING
+  CONNECTED
+  FAILED
+}
+
 model PushSubscription {
   id        String   @id @default(uuid())
   userId    String   // Clerk userId
@@ -134,23 +167,6 @@ model PushSubscription {
 
   @@index([userId])
   @@map("push_subscriptions")
-}
-
-model UpiPayment {
-  id                  String   @id @default(uuid())
-  razorpayOrderId     String   @unique
-  razorpayPaymentId   String?  // Set after webhook confirms payment
-  mobileNumber        String
-  amount              Int      // Amount in paise (₹1 = 100 paise)
-  currency            String   @default("INR")
-  paymentStatus       String   @default("CREATED") // CREATED | PAID | FAILED
-  signature           String?  // Stored for audit trail
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-
-  @@index([razorpayOrderId])
-  @@index([mobileNumber])
-  @@map("upi_payments")
 }
 
 
